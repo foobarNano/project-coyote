@@ -3,6 +3,6 @@
 
 <p align="center">
     <picture>
-      <img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp" width="312px" />
+        <img src="app/src/main/res/screenshots/Screenshot_20231205_180909.png" width="312px" />
     </picture>
 </p>
