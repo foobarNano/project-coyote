@@ -5,16 +5,18 @@ import android.view.Window
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -30,15 +32,17 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.coyote.android.tools.Clipboarder
 import com.coyote.android.tools.ResourceGrabber
 import com.coyote.android.ui.theme.MainTheme
+import com.coyote.android.views.MainViewModel
 
 class Main : ComponentActivity() {
+
+    private val viewModel by viewModels<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -54,7 +58,7 @@ class Main : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    ActivityMain()
+                    ActivityMain(viewModel)
                 }
             }
         }
@@ -62,7 +66,7 @@ class Main : ComponentActivity() {
 }
 
 @Composable
-fun ActivityMain(modifier: Modifier = Modifier, dummyList: List<String> = listOf()) {
+fun ActivityMain(viewModel: MainViewModel, modifier: Modifier = Modifier) {
 
     val context = LocalContext.current
     val resourceGrabber = ResourceGrabber(context)
@@ -75,7 +79,7 @@ fun ActivityMain(modifier: Modifier = Modifier, dummyList: List<String> = listOf
             .fillMaxSize()
             .padding(40.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.spacedBy(30.dp, Alignment.CenterVertically)
     ) {
         Text(
             text = "Installed apps:",
@@ -86,20 +90,23 @@ fun ActivityMain(modifier: Modifier = Modifier, dummyList: List<String> = listOf
         )
         Surface(
             modifier = Modifier
-                .width(420.dp)
-                .height(420.dp)
-                .offset(0.dp, 20.dp),
+                .fillMaxWidth()
+                .fillMaxHeight(0.7f),
             color = MaterialTheme.colorScheme.surface,
             shape = RoundedCornerShape(20.dp)
         ) {
             LazyColumn {
-                items(userApps) {
-                        app -> Row(modifier = Modifier
-                            .width(420.dp)
+                items(userApps) { app ->
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
                             .wrapContentHeight()
+                            .offset(0.dp, 5.dp)
                             .clickable {
-                                // TODO: Add info popup
-                            }) {
+                                viewModel.showInfo()
+                            }
+                    ) {
                     val txt = app.name + '\n' +
                             "Category:\t\t" + app.category + '\n' +
                             "Class:\t\t" + app.className + '\n'
@@ -109,41 +116,29 @@ fun ActivityMain(modifier: Modifier = Modifier, dummyList: List<String> = listOf
                         bitmap = app.iconBitmap.asImageBitmap(),
                         contentDescription = "",
                         modifier = Modifier
-                            .padding(15.dp, 20.dp, 15.dp, 0.dp)
+                            .padding(15.dp, 15.dp)
                     )
                     Text(
                         text = txt,
                         modifier = Modifier
-                            .padding(0.dp, 10.dp, 0.dp, 0.dp),
+                            .padding(5.dp)
+                            .offset(0.dp, 5.dp)
+                            .fillMaxWidth(),
                         color = MaterialTheme.colorScheme.primary,
                         fontFamily = FontFamily.Monospace,
                         fontSize = TextUnit(3f, TextUnitType.Em),
                         lineHeight = TextUnit(1.2f, TextUnitType.Em),
-                        softWrap = false
+                        softWrap = false,
+                        textAlign = TextAlign.Start
                     ) }
-                }
-                // Dummy data for testing purposes, empty during normal use
-                items(dummyList) {
-                        dummy -> Row {
-                    Text(
-                        text = dummy,
-                        modifier = Modifier.padding(10.dp, 10.dp, 0.dp, 0.dp),
-                        color = MaterialTheme.colorScheme.primary,
-                        fontFamily = FontFamily.Monospace,
-                        fontSize = TextUnit(3f, TextUnitType.Em),
-                        lineHeight = TextUnit(1.2f, TextUnitType.Em),
-                        softWrap = false
-                    )
-                }
                 }
             }
         }
         Surface(
             modifier = modifier
-                .width(420.dp)
-                .height(70.dp)
-                .offset(0.dp, 40.dp),
-            shape = RoundedCornerShape(100.dp),
+                .fillMaxWidth()
+                .height(70.dp),
+            shape = RoundedCornerShape(50.dp),
             color = MaterialTheme.colorScheme.secondary
         ) {
             TextButton(
@@ -162,13 +157,8 @@ fun ActivityMain(modifier: Modifier = Modifier, dummyList: List<String> = listOf
             )
         }
     }
-}
 
-@Preview(showBackground = false)
-@Composable
-fun MainPreview() {
-
-    MainTheme {
-        ActivityMain(dummyList = listOf("com.a", "com.b", "com.c", "com.d", "com.e"))
+    if (viewModel.isShowingMore) {
+        CustomDialog(onDismiss = { viewModel.hideInfo() })
     }
 }

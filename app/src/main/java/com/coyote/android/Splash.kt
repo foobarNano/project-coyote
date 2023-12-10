@@ -20,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import com.coyote.android.ui.theme.MainTheme
 import kotlinx.coroutines.delay
 
@@ -40,7 +39,6 @@ class Splash : ComponentActivity() {
         }
     }
 
-    @Preview
     @Composable
     private fun SplashScreen() {
 
@@ -49,7 +47,7 @@ class Splash : ComponentActivity() {
         }
 
         LaunchedEffect(key1 = true, block = {
-            alpha.animateTo(1f, animationSpec = tween(1500))
+            alpha.animateTo(1f, animationSpec = tween(1000))
             delay(1000)
             startActivity(Intent(this@Splash, Main::class.java))
         })
