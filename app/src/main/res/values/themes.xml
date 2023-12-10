@@ -2,4 +2,9 @@
 <resources>
 
     <style name="Theme.PrivacyAudit" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.Splash" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor"> #202226 </item>
+        <item name="android:windowBackground">@drawable/splash_bg</item>
+    </style>
+
 </resources>

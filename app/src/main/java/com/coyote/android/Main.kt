@@ -10,7 +10,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -44,9 +43,10 @@ class Main : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE)
+
         @Suppress("DEPRECATION")
         this.window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE)
 
         setContent {
             MainTheme {
@@ -88,8 +88,7 @@ fun ActivityMain(modifier: Modifier = Modifier, dummyList: List<String> = listOf
             modifier = Modifier
                 .width(420.dp)
                 .height(420.dp)
-                .offset(20.dp, 20.dp)
-                .fillMaxHeight(),
+                .offset(0.dp, 20.dp),
             color = MaterialTheme.colorScheme.surface,
             shape = RoundedCornerShape(20.dp)
         ) {
@@ -168,6 +167,7 @@ fun ActivityMain(modifier: Modifier = Modifier, dummyList: List<String> = listOf
 @Preview(showBackground = false)
 @Composable
 fun MainPreview() {
+
     MainTheme {
         ActivityMain(dummyList = listOf("com.a", "com.b", "com.c", "com.d", "com.e"))
     }
