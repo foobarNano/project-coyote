@@ -8,7 +8,8 @@ data class AppData(
     val category: String,
     val className: String,
     val icon: Drawable,
-    val iconBitmap: Bitmap
+    val iconBitmapSmall: Bitmap,
+    val iconBitmapBig: Bitmap
 ) {
     override fun toString(): String { return name }
 }

@@ -104,16 +104,15 @@ fun ActivityMain(viewModel: MainViewModel, modifier: Modifier = Modifier) {
                             .wrapContentHeight()
                             .offset(0.dp, 5.dp)
                             .clickable {
-                                viewModel.showInfo()
+                                viewModel.showInfo(app)
                             }
                     ) {
                     val txt = app.name + '\n' +
                             "Category:\t\t" + app.category + '\n' +
                             "Class:\t\t" + app.className + '\n'
 
-                    // TODO: Make the image and text align properly
                     Image(
-                        bitmap = app.iconBitmap.asImageBitmap(),
+                        bitmap = app.iconBitmapSmall.asImageBitmap(),
                         contentDescription = "",
                         modifier = Modifier
                             .padding(15.dp, 15.dp)
@@ -158,7 +157,7 @@ fun ActivityMain(viewModel: MainViewModel, modifier: Modifier = Modifier) {
         }
     }
 
-    if (viewModel.isShowingMore) {
-        CustomDialog(onDismiss = { viewModel.hideInfo() })
+    if (viewModel.isActive) {
+        CustomDialog(viewModel.appShown, onDismiss = { viewModel.hideInfo() })
     }
 }

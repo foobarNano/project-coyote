@@ -32,11 +32,12 @@ class ResourceGrabber(context: Context) : AResourceGrabber(context) {
                 val drawable = it.loadIcon(context.packageManager)
 
                 AppData(
-                name = it.packageName,
-                category = if (it.category != -1) it.category.toString() else "Unknown",
-                className = if (it.className.isNullOrEmpty()) "-" else it.className.split('.').last(),
-                icon = drawable,
-                iconBitmap = drawable.toBitmap(iconSize, iconSize)
+                    name = it.packageName,
+                    category = if (it.category != -1) it.category.toString() else "Unknown",
+                    className = if (it.className.isNullOrEmpty()) "-" else it.className.split('.').last(),
+                    icon = drawable,
+                    iconBitmapSmall = drawable.toBitmap(iconSize, iconSize),
+                    iconBitmapBig = drawable.toBitmap(iconSize*4, iconSize*4)
             ) }
     }
 
@@ -52,7 +53,8 @@ class ResourceGrabber(context: Context) : AResourceGrabber(context) {
                     category = if (it.category != -1) it.category.toString() else "Unknown",
                     className = if (it.className.isNullOrEmpty()) "-" else it.className.split('.').last(),
                     icon = drawable,
-                    iconBitmap = drawable.toBitmap(iconSize, iconSize)
+                    iconBitmapSmall = drawable.toBitmap(iconSize, iconSize),
+                    iconBitmapBig = drawable.toBitmap(iconSize*4, iconSize*4)
                 ) }
     }
 }
