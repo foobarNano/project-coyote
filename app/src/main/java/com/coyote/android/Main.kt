@@ -141,19 +141,18 @@ fun ActivityMain(viewModel: MainViewModel, modifier: Modifier = Modifier) {
             color = MaterialTheme.colorScheme.secondary
         ) {
             TextButton(
-                content = {
-                    Text(
-                        text = "Copy",
-                        color = MaterialTheme.colorScheme.primary,
-                        fontFamily = FontFamily.Monospace,
-                        fontSize = TextUnit(6f, TextUnitType.Em),
-                        textAlign = TextAlign.Center
-                    )
-                },
                 onClick = {
                     clipboarder.postClipboard("Installed Apps", userApps.joinToString(separator = "\n"))
                 }
-            )
+            ) {
+                Text(
+                    text = "Copy",
+                    color = MaterialTheme.colorScheme.primary,
+                    fontFamily = FontFamily.Monospace,
+                    fontSize = TextUnit(6f, TextUnitType.Em),
+                    textAlign = TextAlign.Center
+                )
+            }
         }
     }
 
