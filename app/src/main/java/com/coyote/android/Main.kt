@@ -18,9 +18,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -63,100 +63,102 @@ class Main : ComponentActivity() {
             }
         }
     }
-}
 
-@Composable
-fun ActivityMain(viewModel: MainViewModel, modifier: Modifier = Modifier) {
+    @Composable
+    fun ActivityMain(viewModel: MainViewModel, modifier: Modifier = Modifier) {
 
-    val context = LocalContext.current
-    val resourceGrabber = ResourceGrabber(context)
-    val clipboarder = Clipboarder(context)
+        val context = LocalContext.current
+        val resourceGrabber = ResourceGrabber(context)
+        val clipboarder = Clipboarder(context)
 
-    val userApps = resourceGrabber.getUserApps()
+        val userApps = resourceGrabber.getUserApps()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(40.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(30.dp, Alignment.CenterVertically)
-    ) {
-        Text(
-            text = "Installed apps:",
-            color = MaterialTheme.colorScheme.primary,
-            fontFamily = FontFamily.Monospace,
-            fontSize = TextUnit(7f, TextUnitType.Em),
-            textAlign = TextAlign.Center
-        )
-        Surface(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.7f),
-            color = MaterialTheme.colorScheme.surface,
-            shape = RoundedCornerShape(20.dp)
+                .fillMaxSize()
+                .padding(40.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(30.dp, Alignment.CenterVertically)
         ) {
-            LazyColumn {
-                items(userApps) { app ->
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .wrapContentHeight()
-                            .offset(0.dp, 5.dp)
-                            .clickable {
-                                viewModel.showInfo(app)
-                            }
-                    ) {
-                    val txt = app.name + '\n' +
-                            "Category:\t\t" + app.category + '\n' +
-                            "Class:\t\t" + app.className + '\n'
+            Text(
+                text = "Installed apps:",
+                color = MaterialTheme.colorScheme.primary,
+                fontFamily = FontFamily.Monospace,
+                fontSize = TextUnit(7f, TextUnitType.Em),
+                textAlign = TextAlign.Center
+            )
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.7f),
+                color = MaterialTheme.colorScheme.surface,
+                shape = RoundedCornerShape(20.dp)
+            ) {
+                Column(
+                    modifier = Modifier.verticalScroll(rememberScrollState())
+                ) {
+                    for(app in userApps) {
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .wrapContentHeight()
+                                .offset(0.dp, 5.dp)
+                                .clickable {
+                                    viewModel.showInfo(app)
+                                }
+                        ) {
+                            val txt = app.name + '\n' +
+                                    "Category:\t\t" + app.category + '\n' +
+                                    "Class:\t\t" + app.className + '\n'
 
-                    Image(
-                        bitmap = app.iconBitmapSmall.asImageBitmap(),
-                        contentDescription = "",
-                        modifier = Modifier
-                            .padding(15.dp, 15.dp)
-                    )
+                            Image(
+                                bitmap = app.iconBitmapSmall.asImageBitmap(),
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .padding(15.dp, 15.dp)
+                            )
+                            Text(
+                                text = txt,
+                                modifier = Modifier
+                                    .padding(5.dp)
+                                    .offset(0.dp, 5.dp)
+                                    .fillMaxWidth(),
+                                color = MaterialTheme.colorScheme.primary,
+                                fontFamily = FontFamily.Monospace,
+                                fontSize = TextUnit(3f, TextUnitType.Em),
+                                lineHeight = TextUnit(1.2f, TextUnitType.Em),
+                                softWrap = false,
+                                textAlign = TextAlign.Start
+                            ) }
+                    }
+                }
+            }
+            Surface(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .height(70.dp),
+                shape = RoundedCornerShape(50.dp),
+                color = MaterialTheme.colorScheme.secondary
+            ) {
+                TextButton(
+                    onClick = {
+                        clipboarder.postClipboard("Installed Apps", userApps.joinToString(separator = "\n"))
+                    }
+                ) {
                     Text(
-                        text = txt,
-                        modifier = Modifier
-                            .padding(5.dp)
-                            .offset(0.dp, 5.dp)
-                            .fillMaxWidth(),
+                        text = "Copy",
                         color = MaterialTheme.colorScheme.primary,
                         fontFamily = FontFamily.Monospace,
-                        fontSize = TextUnit(3f, TextUnitType.Em),
-                        lineHeight = TextUnit(1.2f, TextUnitType.Em),
-                        softWrap = false,
-                        textAlign = TextAlign.Start
-                    ) }
+                        fontSize = TextUnit(6f, TextUnitType.Em),
+                        textAlign = TextAlign.Center
+                    )
                 }
             }
         }
-        Surface(
-            modifier = modifier
-                .fillMaxWidth()
-                .height(70.dp),
-            shape = RoundedCornerShape(50.dp),
-            color = MaterialTheme.colorScheme.secondary
-        ) {
-            TextButton(
-                onClick = {
-                    clipboarder.postClipboard("Installed Apps", userApps.joinToString(separator = "\n"))
-                }
-            ) {
-                Text(
-                    text = "Copy",
-                    color = MaterialTheme.colorScheme.primary,
-                    fontFamily = FontFamily.Monospace,
-                    fontSize = TextUnit(6f, TextUnitType.Em),
-                    textAlign = TextAlign.Center
-                )
-            }
-        }
-    }
 
-    if (viewModel.isActive) {
-        CustomDialog(viewModel.appShown, onDismiss = { viewModel.hideInfo() })
+        if (viewModel.isActive) {
+            CustomDialog(viewModel.appShown, onDismiss = { viewModel.hideInfo() })
+        }
     }
 }

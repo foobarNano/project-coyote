@@ -78,8 +78,7 @@ class Splash : ComponentActivity() {
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.power),
-                    contentDescription = null,
-                    modifier = Modifier
+                    contentDescription = null
                 )
             }
         }

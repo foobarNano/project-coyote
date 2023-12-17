@@ -9,6 +9,8 @@ import com.coyote.android.models.AppData
 
 abstract class AResourceGrabber(protected val context: Context) {
 
+    @Suppress("LeakingThis")
+    protected val appList: List<ApplicationInfo> = getApplicationList()
     protected val iconSize = 100
 
     protected abstract fun getApplicationList(): List<ApplicationInfo>
@@ -26,7 +28,7 @@ class ResourceGrabber(context: Context) : AResourceGrabber(context) {
 
     override fun getUserApps(): List<AppData> {
 
-        return getApplicationList()
+        return appList
             .filter { it.flags and ApplicationInfo.FLAG_SYSTEM != 1 }
             .map {
                 val drawable = it.loadIcon(context.packageManager)
@@ -43,7 +45,7 @@ class ResourceGrabber(context: Context) : AResourceGrabber(context) {
 
     override fun getSystemApps(): List<AppData> {
 
-        return getApplicationList()
+        return appList
             .filter { it.flags and ApplicationInfo.FLAG_SYSTEM == 1 }
             .map {
                 val drawable = it.loadIcon(context.packageManager)
