@@ -52,8 +52,8 @@ class Splash : ComponentActivity() {
         LaunchedEffect(
             key1 = true,
             block = {
-                a1.animateTo(1f, animationSpec = tween(1000))
-                a2.animateTo(1f, animationSpec = tween(1000))
+                a1.animateTo(1f, animationSpec = tween(500))
+                a2.animateTo(1f, animationSpec = tween(500))
         })
         Column(
             modifier = Modifier

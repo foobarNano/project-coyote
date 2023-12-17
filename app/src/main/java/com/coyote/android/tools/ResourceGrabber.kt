@@ -6,8 +6,14 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import androidx.core.graphics.drawable.toBitmap
 import com.coyote.android.models.AppData
+import java.io.Serializable
 
-abstract class AResourceGrabber(protected val context: Context) {
+abstract class ResourceGrabber(protected val context: Context) {
+
+    data class Resources(
+        val userApps: List<AppData>,
+        val systemApps: List<AppData>
+    ): Serializable
 
     @Suppress("LeakingThis")
     protected val appList: List<ApplicationInfo> = getApplicationList()
@@ -16,9 +22,17 @@ abstract class AResourceGrabber(protected val context: Context) {
     protected abstract fun getApplicationList(): List<ApplicationInfo>
     abstract fun getUserApps(): List<AppData>
     abstract fun getSystemApps(): List<AppData>
+
+    fun getResources(): Serializable {
+        return Resources(getUserApps(), getSystemApps())
+    }
 }
 
-class ResourceGrabber(context: Context) : AResourceGrabber(context) {
+fun getGrabberInstance(context: Context): ResourceGrabberImpl {
+    return ResourceGrabberImpl(context)
+}
+
+class ResourceGrabberImpl(context: Context) : ResourceGrabber(context) {
 
     @SuppressLint("QueryPermissionsNeeded")
     override fun getApplicationList(): List<ApplicationInfo> {
