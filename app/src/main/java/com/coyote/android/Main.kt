@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.coyote.android.tools.Clipboarder
-import com.coyote.android.tools.getGrabberInstance
+import com.coyote.android.tools.grabbers.getAppListGrabber
 import com.coyote.android.ui.theme.MainTheme
 import com.coyote.android.views.MainViewModel
 
@@ -68,7 +68,7 @@ class Main : ComponentActivity() {
     fun ActivityMain(viewModel: MainViewModel, modifier: Modifier = Modifier) {
 
         val context = LocalContext.current
-        val resourceGrabber = getGrabberInstance(context)
+        val resourceGrabber = getAppListGrabber(context)
         val clipboarder = Clipboarder(context)
 
         val userApps = resourceGrabber.getUserApps()

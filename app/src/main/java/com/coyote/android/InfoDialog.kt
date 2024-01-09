@@ -41,14 +41,6 @@ fun CustomDialog(
                 bitmap = app!!.iconBitmapBig.asImageBitmap(),
                 contentDescription = null
             )
-//            Text(
-//                text = "Nothing to see here yet :P",
-//                modifier = Modifier.padding(10.dp),
-//                color = MaterialTheme.colorScheme.primary,
-//                fontFamily = FontFamily.Monospace,
-//                fontSize = TextUnit(4f, TextUnitType.Em),
-//                textAlign = TextAlign.Center
-//            )
         }
     }
     
