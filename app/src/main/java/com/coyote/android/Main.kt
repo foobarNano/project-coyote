@@ -35,7 +35,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
-import com.coyote.android.tools.Clipboarder
+import com.coyote.android.tools.getClipborder
 import com.coyote.android.tools.grabbers.getAppListGrabber
 import com.coyote.android.ui.theme.MainTheme
 import com.coyote.android.views.MainViewModel
@@ -69,7 +69,7 @@ class Main : ComponentActivity() {
 
         val context = LocalContext.current
         val resourceGrabber = getAppListGrabber(context)
-        val clipboarder = Clipboarder(context)
+        val clipboarder = getClipborder(context)
 
         val userApps = resourceGrabber.getUserApps()
 

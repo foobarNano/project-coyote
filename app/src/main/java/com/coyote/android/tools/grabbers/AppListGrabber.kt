@@ -7,15 +7,11 @@ import android.content.pm.PackageManager
 import androidx.core.graphics.drawable.toBitmap
 import com.coyote.android.models.AppData
 
-abstract class AppListGrabber(protected val context: Context) {
+interface AppListGrabber {
 
-    @Suppress("LeakingThis")
-    protected val appList: List<ApplicationInfo> = getApplicationList()
-    protected val iconSize = 100
-
-    protected abstract fun getApplicationList(): List<ApplicationInfo>
-    abstract fun getUserApps(): List<AppData>
-    abstract fun getSystemApps(): List<AppData>
+    fun getApplicationList(): List<ApplicationInfo>
+    fun getUserApps(): List<AppData>
+    fun getSystemApps(): List<AppData>
 }
 
 fun getAppListGrabber(context: Context): AppListGrabber {
@@ -23,7 +19,9 @@ fun getAppListGrabber(context: Context): AppListGrabber {
     return AppListGrabberImpl(context)
 }
 
-class AppListGrabberImpl(context: Context) : AppListGrabber(context) {
+class AppListGrabberImpl(private val context: Context) : AppListGrabber {
+
+    private val iconSize = 100
 
     @SuppressLint("QueryPermissionsNeeded")
     override fun getApplicationList(): List<ApplicationInfo> {
@@ -33,7 +31,7 @@ class AppListGrabberImpl(context: Context) : AppListGrabber(context) {
 
     override fun getUserApps(): List<AppData> {
 
-        return appList
+        return getApplicationList()
             .filter { it.flags and ApplicationInfo.FLAG_SYSTEM != 1 }
             .map {
                 val drawable = it.loadIcon(context.packageManager)
@@ -50,7 +48,7 @@ class AppListGrabberImpl(context: Context) : AppListGrabber(context) {
 
     override fun getSystemApps(): List<AppData> {
 
-        return appList
+        return getApplicationList()
             .filter { it.flags and ApplicationInfo.FLAG_SYSTEM == 1 }
             .map {
                 val drawable = it.loadIcon(context.packageManager)

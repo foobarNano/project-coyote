@@ -4,15 +4,19 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 
-abstract class AClipboarder(context: Context) {
+interface Clipboarder {
 
-    protected val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
-
-    abstract fun readClipboard(): String
-    abstract fun postClipboard(label: String, text: String)
+    fun readClipboard(): String
+    fun postClipboard(label: String, text: String)
 }
 
-class Clipboarder(context: Context) : AClipboarder(context) {
+fun getClipborder(context: Context): Clipboarder {
+    return ClipboarderImpl(context)
+}
+
+class ClipboarderImpl(context: Context) : Clipboarder {
+
+    private val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
 
     override fun readClipboard(): String {
 
